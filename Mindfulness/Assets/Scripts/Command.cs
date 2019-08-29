@@ -28,7 +28,7 @@ public class PlayerJumpCommand : JumpCommand
     {
         this.Execute(anim);
         //TODO:gdy beda animacje
-        player.PerformWeakJump();
+       // player.UpdateAerialState();
     }
 }
 
@@ -45,7 +45,7 @@ public class PlayerHorizontalMoveCommand : HorizontalMoveCommand
     public void Execute(Animator anim, IPlayerController player, float horizontalAxis)
     {
         this.Execute(anim);
-        player.MoveHorizontal(horizontalAxis);
+        player.Move(horizontalAxis);
     }
 }
 

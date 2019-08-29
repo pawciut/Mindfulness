@@ -270,7 +270,7 @@ SpriteShapeRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
+  m_DynamicOccludee: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
@@ -567,15 +567,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bafcac23550cf514aa166a4477cbc262, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  JumpHeight: 15
-  Decelleration: 3
+  JumpHeight: 600
+  Speed: 3
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 256
   IsGroundedDelayedTime: 0.25
-  HorDampingBasic: 0.25
-  HorDampingStopping: 1
-  HorDampTurning: 0.5
   weakJumpFactor: 0.5
 --- !u!114 &1728006744
 MonoBehaviour:
@@ -590,6 +587,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actor: {fileID: 1728006738}
+  JumpResponseCountdownTimer: {fileID: 11400000, guid: 4cf20e2eadaf37c4aba03e04d7cafcb6,
+    type: 2}
 --- !u!1001 &98951311180862829
 PrefabInstance:
   m_ObjectHideFlags: 0

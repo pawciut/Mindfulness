@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 
 public interface IPlayerController
 {
-    bool IsGrounded { get; set; }
+    //AerialState AerialState { get; set; }
+
     float JumpKeyDownTimer { get; set; }
 
-    void PerformWeakJump();
-    void MoveHorizontal(float axisRaw);
+
+    void UpdateAerialState(CountdownTimer jumpResponseCountdownTimer, bool jumpButtonDown, bool jumpButtonUp);
+    void Move(float axisRaw);
     void ResetJumpKeyDownTimer();
 }
