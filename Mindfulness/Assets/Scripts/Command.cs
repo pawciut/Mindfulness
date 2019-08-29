@@ -15,39 +15,19 @@ public class JumpCommand : Command
     }
 }
 
-public class PlayerJumpCommand : JumpCommand
-{
-    float jumpDelayCountdown = 0;
-
-    public void SetJumpDownTimer(IPlayerController player)
-    {
-        player.ResetJumpKeyDownTimer();
-    }
-
-    public void Execute(Animator anim, IPlayerController player)
-    {
-        this.Execute(anim);
-        //TODO:gdy beda animacje
-       // player.UpdateAerialState();
-    }
-}
-
-
-public class HorizontalMoveCommand : Command
+public class MoveCommand : Command
 {
     public override void Execute(Animator anim)
     {
         //TODO:gdy bed aanimacje
     }
 }
-public class PlayerHorizontalMoveCommand : HorizontalMoveCommand
+
+
+public class IdleCommand : Command
 {
-    public void Execute(Animator anim, IPlayerController player, float horizontalAxis)
+    public override void Execute(Animator anim)
     {
-        this.Execute(anim);
-        player.Move(horizontalAxis);
+        //TODO:gdy bed aanimacje
     }
 }
-
-
-

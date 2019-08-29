@@ -4,48 +4,41 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IPlayerController
 {
-    private bool isFacingRight = true;  // For determining which way the player is currently facing.
-    [Range(0, .3f)]
-    [SerializeField]
-    private float movementSmoothing = .05f;	// How much to smooth out the movement
-
     [SerializeField]
     float JumpHeight = 600;
     [SerializeField]
     float Speed = 8;
     [SerializeField]
     LayerMask groundLayerMask;
-
-    Rigidbody2D rigidBody;
-
-    [SerializeField]
-    float IsGroundedDelayedTime = 0.25f;
-
-    /// <summary>
-    /// store jump request for x time even if currently cant jump or is already jumping
-    /// </summary>
-    [SerializeField]
-    public float JumpKeyDownTimer { get; set; } = 0.2f;
-
-
-    [SerializeField]
-    [Range(0, 1)]
-    float weakJumpFactor = 0.5f;
-
     [SerializeField()]
     bool isGrounded = false;
+
+
+    [Range(0, .3f)]
+    [SerializeField]
+    private float movementSmoothing = .05f;	// How much to smooth out the movement
+    private bool isFacingRight = true;  // For determining which way the player is currently facing.
+
+
+    Rigidbody2D rigidBody;
+    Animator anim;
     bool newIsGrounded = false;
-
-
-    //public bool IsGrounded { get { return isGrounded; } set { isGrounded = value; } }
-
     bool alreadyJumpedTwice = false;
     public AerialState AerialState;
+
+    Command idleCommand;
+    Command moveCommand;
+    Command jumpCommand;
 
     void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
-        Debug.Log($"{Time.time}: IsGrounded:{isGrounded}");
+        anim = GetComponent<Animator>();
+
+        idleCommand = new IdleCommand();
+        moveCommand = new MoveCommand();
+        jumpCommand = new JumpCommand();
+        //Debug.Log($"{Time.time}: IsGrounded:{isGrounded}");
     }
 
     void Update()
@@ -73,10 +66,6 @@ public class PlayerController : MonoBehaviour, IPlayerController
         }
     }
 
-    public void ResetJumpKeyDownTimer()
-    {
-
-    }
 
     public void UpdateAerialState(CountdownTimer jumpResponseCountdownTimer, bool jumpButtonDown, bool jumpButtonUp)
     {
@@ -89,7 +78,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
             && jumpResponseCountdownTimer.Expired)
         {
             alreadyJumpedTwice = false;
-
+            jumpCommand.Execute(anim);
             rigidBody.AddForce(Vector2.up * JumpHeight);
             jumpResponseCountdownTimer.Start();
 
@@ -102,6 +91,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
             && !alreadyJumpedTwice)
         {
             alreadyJumpedTwice = true;
+            jumpCommand.Execute(anim);
             AerialState = AerialState.SecondJump;
 
             //przed skokiem wyzerowanie predkości wznoszenia, żeby drugi skok nie zwielokratniał bieżącej siły skoku
@@ -122,6 +112,27 @@ public class PlayerController : MonoBehaviour, IPlayerController
         Vector3 velocity = rigidBody.velocity;
         Vector3 targetVelocity = new Vector2(horizontalAxis * Speed, rigidBody.velocity.y);
         rigidBody.velocity = Vector3.SmoothDamp(rigidBody.velocity, targetVelocity, ref velocity, movementSmoothing);
+
+        // If the input is moving the player right and the player is facing left...
+        if (horizontalAxis > 0 && !isFacingRight)
+        {
+            // ... flip the player.
+            Flip();
+        }
+        // Otherwise if the input is moving the player left and the player is facing right...
+        else if (horizontalAxis < 0 && isFacingRight)
+        {
+            // ... flip the player.
+            Flip();
+        }
+
+        if(isGrounded )
+        {
+            if (horizontalAxis != 0)
+                moveCommand.Execute(anim);
+            else
+                idleCommand.Execute(anim);
+        }
     }
 
 

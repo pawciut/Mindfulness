@@ -6,9 +6,6 @@ public class InputHandler : MonoBehaviour
 {
     public GameObject actor;
     IPlayerController player;
-    Animator anim;
-    PlayerJumpCommand jumpCommand;
-    PlayerHorizontalMoveCommand horizontalMoveCommand;
 
 
 
@@ -17,9 +14,6 @@ public class InputHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        jumpCommand = new PlayerJumpCommand();
-        horizontalMoveCommand = new PlayerHorizontalMoveCommand();
-        anim = actor.GetComponent<Animator>();
         player = actor.GetComponent<PlayerController>();
     }
 
@@ -45,8 +39,8 @@ public class InputHandler : MonoBehaviour
         }
 
         player.UpdateAerialState(JumpResponseCountdownTimer, jumpButtonDown, jumpButtonUp);
-
-        horizontalMoveCommand.Execute(anim, player, Input.GetAxisRaw("Horizontal"));
+        player.Move( Input.GetAxisRaw("Horizontal"));
+        
         //Debug.Log($"{Time.time}: HorizontalAxis:{Input.GetAxisRaw("Horizontal")} Jump Btn Down:{jumpButtonDown} Jump Btn Up: {jumpButtonUp}");
     }
 }
