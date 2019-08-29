@@ -15,7 +15,7 @@ TagManager:
   - 
   - Platform
   - Player
-  - 
+  - Pickups
   - 
   - 
   - 
@@ -46,4 +46,7 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 3870782211
+    locked: 0
+  - name: PickupsForeground
+    uniqueID: 1616640799
     locked: 0
