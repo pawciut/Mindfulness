@@ -37,6 +37,9 @@ public class InteractableObject : MonoBehaviour
     }
 
     public bool CanPickup;
+    public bool CanUse;
+    [Range(0,1)]
+    public float JumpPenaltyWhenPickedUp = 0.0f;
 
     void OnTriggerEnter2D(Collider2D col)
     {
@@ -98,7 +101,7 @@ public class InteractableObject : MonoBehaviour
             rigidB.isKinematic = true;
     }
 
-    public void Drop()
+    public void Dropped(Rigidbody2D player)
     {
         var allColliders = this.GetComponents<Collider2D>();
         foreach (var col in allColliders)
@@ -107,6 +110,9 @@ public class InteractableObject : MonoBehaviour
 
         sRenderer.sortingLayerID = DefaultLayer;
         if (rigidB != null)
+        {
             rigidB.isKinematic = defaultIsKinematic;
+            rigidB.velocity = new Vector2(player.velocity.x, rigidB.velocity.y);
+        }
     }
 }

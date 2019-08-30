@@ -82,6 +82,8 @@ public class PlayerController : MonoBehaviour, IPlayerController
     {
         jumpResponseCountdownTimer.Tick(Time.deltaTime);
 
+        float finalJumpHeight = JumpHeight  * (1 - (PlayerItemSlot != null ? PlayerItemSlot.JumpPenaltyWhenPickedUp : 0f));
+
         //Skaczemy
         if (AerialState == AerialState.Grounded
             && jumpButtonDown
@@ -90,7 +92,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         {
             alreadyJumpedTwice = false;
             jumpCommand.Execute(anim);
-            rigidBody.AddForce(Vector2.up * JumpHeight);
+            rigidBody.AddForce(Vector2.up * finalJumpHeight);
             jumpResponseCountdownTimer.Start();
 
             //Debug.Log($"{Time.time}: Jump:{rigidBody.velocity}");
@@ -108,7 +110,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
             //przed skokiem wyzerowanie predkości wznoszenia, żeby drugi skok nie zwielokratniał bieżącej siły skoku
             rigidBody.velocity = new Vector2(rigidBody.velocity.x, 0);
 
-            rigidBody.AddForce(Vector2.up * JumpHeight);
+            rigidBody.AddForce(Vector2.up * finalJumpHeight);
             jumpResponseCountdownTimer.Stop();
 
             //Debug.Log($"{Time.time}: Jump2:{rigidBody.velocity}");
@@ -156,6 +158,8 @@ public class PlayerController : MonoBehaviour, IPlayerController
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
         transform.localScale = theScale;
+        if (PlayerItemSlot != null)
+            PlayerItemSlot.transform.localScale = theScale;
     }
 
     public void Use()
@@ -163,10 +167,12 @@ public class PlayerController : MonoBehaviour, IPlayerController
         //najpierw używa tego co ma
         if (PlayerItemSlot != null)
         {
-            //if(CanUse)
-            PlayerItemSlot.Use();
-            UIPlayerManager.SetItem(null);
-            PlayerItemSlot = null;
+            if (PlayerItemSlot.CanUse)
+            {
+                PlayerItemSlot.Use();
+                UIPlayerManager.SetItem(null);
+                PlayerItemSlot = null;
+            }
         }
         //Jeżeli nie ma aktualnie przedmiotu/ naładowanej umiejętności to może podnieść/użyć coś z otoczenia
         else if (AvailableObjects != null && AvailableObjects.Count > 0)
@@ -182,6 +188,17 @@ public class PlayerController : MonoBehaviour, IPlayerController
             }
             //UnregisterAsAvailableObject(obj);
 
+        }
+    }
+
+    public void Drop()
+    {
+        if (PlayerItemSlot != null)
+        {
+
+            PlayerItemSlot.Dropped(rigidBody);
+            UIPlayerManager.SetItem(null);
+            PlayerItemSlot = null;
         }
     }
 

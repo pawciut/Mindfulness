@@ -44,5 +44,8 @@ public class InputHandler : MonoBehaviour
 
         if (Input.GetButtonDown("Use"))
             player.Use();
+
+        if (Input.GetButtonDown("Drop"))
+            player.Drop();
     }
 }
