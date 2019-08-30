@@ -17,17 +17,16 @@ public class InputHandler : MonoBehaviour
         player = actor.GetComponent<PlayerController>();
     }
 
-        bool jumpButtonDown = false;
-        bool jumpButtonUp = false;
+    bool jumpButtonDown = false;
+    bool jumpButtonUp = false;
 
     // Update is called once per frame
     void Update()
     {
         jumpButtonDown = false;
         jumpButtonUp = false;
-        
-        
-        if (Input.GetButtonDown("Jump") )
+
+        if (Input.GetButtonDown("Jump"))
         {
             jumpButtonDown = true;
             //Debug.Log($"{Time.time} Jump Btn Down");
@@ -39,8 +38,11 @@ public class InputHandler : MonoBehaviour
         }
 
         player.UpdateAerialState(JumpResponseCountdownTimer, jumpButtonDown, jumpButtonUp);
-        player.Move( Input.GetAxisRaw("Horizontal"));
-        
+        player.Move(Input.GetAxisRaw("Horizontal"));
+
         //Debug.Log($"{Time.time}: HorizontalAxis:{Input.GetAxisRaw("Horizontal")} Jump Btn Down:{jumpButtonDown} Jump Btn Up: {jumpButtonUp}");
+
+        if (Input.GetButtonDown("Use"))
+            player.Use();
     }
 }

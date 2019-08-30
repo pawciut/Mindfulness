@@ -16,7 +16,7 @@ TagManager:
   - Platform
   - Player
   - Pickups
-  - 
+  - PickupsPlatforms
   - 
   - 
   - 
@@ -40,6 +40,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: PickupsBackground
+    uniqueID: 1258928279
     locked: 0
   - name: Platform
     uniqueID: 50050837

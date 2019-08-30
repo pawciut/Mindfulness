@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour, IPlayerController
@@ -12,6 +13,11 @@ public class PlayerController : MonoBehaviour, IPlayerController
     LayerMask groundLayerMask;
     [SerializeField()]
     bool isGrounded = false;
+    [SerializeField]
+    UIPlayerManager UIPlayerManager;
+    [SerializeField()]
+    Transform AttachObjectMarker;
+    
 
 
     [Range(0, .3f)]
@@ -30,6 +36,10 @@ public class PlayerController : MonoBehaviour, IPlayerController
     Command moveCommand;
     Command jumpCommand;
 
+    List<InteractableObject> AvailableObjects;
+    InteractableObject PlayerItemSlot;
+    public bool CanPickup { get { return PlayerItemSlot == null; } }
+
     void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
@@ -39,6 +49,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         moveCommand = new MoveCommand();
         jumpCommand = new JumpCommand();
         //Debug.Log($"{Time.time}: IsGrounded:{isGrounded}");
+        AvailableObjects = new List<InteractableObject>();
     }
 
     void Update()
@@ -126,7 +137,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
             Flip();
         }
 
-        if(isGrounded )
+        if (isGrounded)
         {
             if (horizontalAxis != 0)
                 moveCommand.Execute(anim);
@@ -147,4 +158,58 @@ public class PlayerController : MonoBehaviour, IPlayerController
         transform.localScale = theScale;
     }
 
+    public void Use()
+    {
+        //najpierw używa tego co ma
+        if (PlayerItemSlot != null)
+        {
+            //if(CanUse)
+            PlayerItemSlot.Use();
+            UIPlayerManager.SetItem(null);
+            PlayerItemSlot = null;
+        }
+        //Jeżeli nie ma aktualnie przedmiotu/ naładowanej umiejętności to może podnieść/użyć coś z otoczenia
+        else if (AvailableObjects != null && AvailableObjects.Count > 0)
+        {
+            var obj = AvailableObjects.FirstOrDefault();
+            if (obj.CanPickup && CanPickup)
+            {
+                Pickup(obj);
+            }
+            else
+            {
+                //obj.Use();
+            }
+            //UnregisterAsAvailableObject(obj);
+
+        }
+    }
+
+    public void RegisterAsAvailableObject(InteractableObject obj)
+    {
+        if (!AvailableObjects.Contains(obj))
+            AvailableObjects.Add(obj);
+    }
+
+    public void UnregisterAsAvailableObject(InteractableObject obj)
+    {
+        if (AvailableObjects.Contains(obj))
+            AvailableObjects.Remove(obj);
+    }
+
+    public void Pickup(InteractableObject obj)
+    {
+        if(CanPickup && obj.CanPickup)
+        {
+            PlayerItemSlot = obj;
+            obj.PickedUp(this);
+            //set ui slot as 
+            UIPlayerManager.SetItem(obj);
+        }
+    }
+
+    public Transform GetPointToAttach()
+    {
+        return AttachObjectMarker;
+    }
 }

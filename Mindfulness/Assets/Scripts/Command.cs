@@ -31,3 +31,11 @@ public class IdleCommand : Command
         //TODO:gdy bed aanimacje
     }
 }
+
+public class UseCommand : Command
+{
+    public override void Execute(Animator anim)
+    {
+        //TODO:gdy bed animacje
+    }
+}
