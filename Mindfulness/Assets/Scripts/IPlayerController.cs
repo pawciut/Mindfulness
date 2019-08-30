@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using UnityEngine;
 
 public interface IPlayerController
 {
-    bool IsGrounded { get; set; }
-    float JumpKeyDownTimer { get; set; }
-
-    void PerformWeakJump();
-    void MoveHorizontal(float axisRaw);
-    void ResetJumpKeyDownTimer();
+    void UpdateAerialState(CountdownTimer jumpResponseCountdownTimer, bool jumpButtonDown, bool jumpButtonUp);
+    void Move(float axisRaw);
+    void Use();
+    void Drop();
+    void RegisterAsAvailableObject(InteractableObject obj);
+    void UnregisterAsAvailableObject(InteractableObject obj);
+    bool CanPickup { get; }
+    void Pickup(InteractableObject obj);
+    Transform GetPointToAttach();
 }
