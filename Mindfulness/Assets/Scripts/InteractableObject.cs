@@ -82,7 +82,7 @@ public class InteractableObject : MonoBehaviour
             UseObject.Invoke();
 
         this.gameObject.SetActive(false);
-        DestroyImmediate(this);//TODO:nie wiem czemu sie nie usuwaja
+        DestroyImmediate(this.gameObject);//TODO:nie wiem czemu sie nie usuwaja
     }
 
     public void PickedUp(IPlayerController player)

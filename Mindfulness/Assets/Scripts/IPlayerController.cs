@@ -16,4 +16,5 @@ public interface IPlayerController
     bool CanPickup { get; }
     void Pickup(InteractableObject obj);
     Transform GetPointToAttach();
+    void AddScore(int scoreValue);
 }

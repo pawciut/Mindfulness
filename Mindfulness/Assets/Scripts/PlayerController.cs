@@ -169,6 +169,15 @@ public class PlayerController : MonoBehaviour, IPlayerController
         {
             if (PlayerItemSlot.CanUse)
             {
+                if(PlayerItemSlot.PickupType == PickupType.PieceOfMind)
+                {
+                    var validator = GetComponent<PieceOfMindUseValidator>();
+                    if(!validator.CanUse())
+                    {
+                        //TODO:play sound "I cant do that yet"
+                        return;
+                    }
+                }
                 PlayerItemSlot.Use();
                 UIPlayerManager.SetItem(null);
                 PlayerItemSlot = null;
@@ -229,4 +238,13 @@ public class PlayerController : MonoBehaviour, IPlayerController
     {
         return AttachObjectMarker;
     }
+
+    public void AddScore(int scoreValue)
+    {
+        var score = PlayerPrefs.GetInt(Constants.Player_Pref_Score, 0);
+        PlayerPrefs.SetInt(Constants.Player_Pref_Score, score+=scoreValue);
+
+        Debug.Log($"Added score {scoreValue}");
+    }
+
 }
