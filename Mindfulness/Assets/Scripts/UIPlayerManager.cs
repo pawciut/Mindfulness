@@ -11,6 +11,7 @@ public class UIPlayerManager : MonoBehaviour
 
     public UnityEvent BerryAdded;
     public UnityEvent RockAdded;
+    public UnityEvent StickAdded;
 
     public UnityEvent PlayerDied;
 
@@ -84,6 +85,9 @@ public class UIPlayerManager : MonoBehaviour
                     break;
                 case PickupType.Rock:
                     RockAdded?.Invoke();
+                    break;
+                case PickupType.Stick:
+                    StickAdded?.Invoke();
                     break;
                 default:
                     ItemRemoved?.Invoke();
