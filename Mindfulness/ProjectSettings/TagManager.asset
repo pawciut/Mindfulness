@@ -56,3 +56,6 @@ TagManager:
   - name: PickupsForeground
     uniqueID: 1616640799
     locked: 0
+  - name: UI
+    uniqueID: 1121169427
+    locked: 0

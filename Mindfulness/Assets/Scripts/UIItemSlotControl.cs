@@ -10,6 +10,7 @@ public class UIItemSlotControl : MonoBehaviour
     public GameObject BerryPresenter;
     public GameObject RockPresenter;
     public GameObject StickPresenter;
+    public GameObject FocusPresenter;
 
     Dictionary<PickupType, GameObject> ItemDictionary;
 
@@ -19,6 +20,7 @@ public class UIItemSlotControl : MonoBehaviour
         ItemDictionary.Add(PickupType.Berry, BerryPresenter);
         ItemDictionary.Add(PickupType.Rock, RockPresenter);
         ItemDictionary.Add(PickupType.Stick, StickPresenter);
+        ItemDictionary.Add(PickupType.PieceOfMind, FocusPresenter);
 
         DisplayEmpty();
 
@@ -59,6 +61,10 @@ public class UIItemSlotControl : MonoBehaviour
     public void DisplayStick()
     {
         DisplayKey(PickupType.Stick);
+    }
+    public void DisplayFocus()
+    {
+        DisplayKey(PickupType.PieceOfMind);
     }
 
 

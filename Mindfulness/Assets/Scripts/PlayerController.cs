@@ -171,7 +171,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
             {
                 if(PlayerItemSlot.PickupType == PickupType.PieceOfMind)
                 {
-                    var validator = GetComponent<PieceOfMindUseValidator>();
+                    var validator = PlayerItemSlot.GetComponent<PieceOfMindUseValidator>();
                     if(!validator.CanUse())
                     {
                         //TODO:play sound "I cant do that yet"
