@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -16,13 +17,22 @@ public class UIPlayerManager : MonoBehaviour
 
     public UnityEvent PlayerDied;
 
+    public GameObject Focus;
+
+    public GameStateManager StateManager;
+    public TextMeshProUGUI TimePresenter;
+    public TextMeshProUGUI ScorePresenter;
+
 
     public UILifeControl[] Lives = new UILifeControl[3];
     public int InitialLives = 3;
 
+    public AudioSource PlayerDeathSound;
+
     // Start is called before the first frame update
     void Start()
     {
+        Focus.SetActive(true);
         for(int i=0;i<InitialLives;++i)
         {
             Lives[i].Add();
@@ -33,7 +43,7 @@ public class UIPlayerManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        TimePresenter.text = StateManager.GetTime();
     }
 
     public void AddLives(int lives)
@@ -55,19 +65,22 @@ public class UIPlayerManager : MonoBehaviour
         Debug.Log($"Added {lives} lives");
     }
 
-    public void SubstractLives (int lives)
+    public void SubstractLives(int lives)
     {
         int livesToSubstract = lives;
         while (livesToSubstract > 0)
         {
             var found = Lives.LastOrDefault(l => l.Active == true);
-            if(found != null)
+            if (found != null)
                 found.Remove();
             --livesToSubstract;
         }
 
         if (Lives.Where(l => l.Active).Count() <= 0)
+        {
+            PlayerDeathSound.Play();
             PlayerDied?.Invoke();
+        }
     }
 
     public void SetItem(InteractableObject obj)

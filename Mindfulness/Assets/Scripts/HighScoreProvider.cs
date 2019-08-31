@@ -5,15 +5,22 @@ using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class HighScoreProvider : MonoBehaviour
 {
     [SerializeField()]
     GameObject NameInput;
+    [SerializeField()]
+    GameObject ConfirmButton;
 
     [SerializeField()]
     TextMeshProUGUI HighscoreText;
+
+    public bool LoadOnStart;
+
+    public UnityEvent OnConfirmed;
 
 
 
@@ -34,7 +41,8 @@ public class HighScoreProvider : MonoBehaviour
         byte[] rawData = form.data;
         WWW www = new WWW(BASE_URL, rawData);
         yield return www;
-        StartCoroutine(GetScores());
+        //StartCoroutine(GetScores());
+        OnConfirmed?.Invoke();
     }
 
     public void Send()
@@ -42,7 +50,8 @@ public class HighScoreProvider : MonoBehaviour
         Name = NameInput.GetComponent<TMP_InputField>().text.Replace(",","");//zeby csv potem nie zwalilo
         Score = PlayerPrefs.GetInt(Constants.Player_Pref_Score, 0);
         FinishedTime = PlayerPrefs.GetInt(Constants.Player_Pref_Time, 0);
-
+        NameInput.gameObject.SetActive(false);
+        ConfirmButton.gameObject.SetActive(false);
         StartCoroutine(Post(Name, Score, FinishedTime));
     }
 
@@ -91,6 +100,12 @@ public class HighScoreProvider : MonoBehaviour
         }
 
 
+    }
+
+    private void Start()
+    {
+        if (LoadOnStart)
+            GetData();
     }
 
     public struct HighscoreEntry

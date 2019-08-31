@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour, IPlayerController
 {
@@ -17,7 +18,13 @@ public class PlayerController : MonoBehaviour, IPlayerController
     UIPlayerManager UIPlayerManager;
     [SerializeField()]
     Transform AttachObjectMarker;
+
+    [SerializeField()]
+    AudioSource WoundedSound;
+    [SerializeField()]
+    AudioSource JumpSound;
     
+    public bool DontCountScore;
 
 
     [Range(0, .3f)]
@@ -92,6 +99,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         {
             alreadyJumpedTwice = false;
             jumpCommand.Execute(anim);
+            JumpSound?.Play();
             rigidBody.AddForce(Vector2.up * finalJumpHeight);
             jumpResponseCountdownTimer.Start();
 
@@ -105,6 +113,7 @@ public class PlayerController : MonoBehaviour, IPlayerController
         {
             alreadyJumpedTwice = true;
             jumpCommand.Execute(anim);
+            JumpSound?.Play();
             AerialState = AerialState.SecondJump;
 
             //przed skokiem wyzerowanie predkości wznoszenia, żeby drugi skok nie zwielokratniał bieżącej siły skoku
@@ -241,10 +250,20 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
     public void AddScore(int scoreValue)
     {
-        var score = PlayerPrefs.GetInt(Constants.Player_Pref_Score, 0);
-        PlayerPrefs.SetInt(Constants.Player_Pref_Score, score+=scoreValue);
+        if (!DontCountScore)
+        {
+            var score = PlayerPrefs.GetInt(Constants.Player_Pref_Score, 0);
+            score += scoreValue;
+            PlayerPrefs.SetInt(Constants.Player_Pref_Score, score);
+            UIPlayerManager.ScorePresenter.text = score.ToString();
 
-        Debug.Log($"Added score {scoreValue}");
+            Debug.Log($"Added score {scoreValue}");
+        }
     }
 
+    public void Damage(int damage)
+    {
+        UIPlayerManager.SubstractLives(damage);
+        WoundedSound?.Play();
+    }
 }

@@ -10,10 +10,20 @@ public class GameMusic : MonoBehaviour
     [SerializeField()]
     AudioSource LevelMusic;
 
+    static GameMusic instance;
 
     private void Awake()
     {
         DontDestroyOnLoad(transform.gameObject);
+
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void PlayMenu()

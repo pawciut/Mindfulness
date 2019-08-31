@@ -10,6 +10,7 @@ public class Constants
     public const string DateFormat = "yyyy-MM-dd HH:mm";
     public const string Player_Pref_Score = "score";
     public const string Player_Pref_Time = "time";
+    public const string Player_Pref_Music = "music";
 
     public const int Name_Char_Limit = 10;
     public const int Score_Char_Limit = 15;
@@ -20,7 +21,18 @@ public class Constants
 
 
     public const string MenuScene = "MenuScene";
-    public const string Level1Scene = "PlayerTest_001";
+    public const string Level1Scene = "Level1";
     public const string CreditsScene = "Credits";
-    public const string HowToPlayScene = "HowToPlay";
+    public const string HowToPlayScene = "Level0";
+    public const string HighscoreScene = "Highscore";
+    public const string HighscoresScene = "Highscores";
+
+
+    public static string FormatTime(float time)
+    {
+        int hours = ((int)time / 3600) % 24;
+        int minutes = ((int)time / 60) % 60;
+        int seconds = (int)time % 60;
+        return String.Format("{0:D2}:{1:D2}:{2:D2}", hours, minutes, seconds);
+    }
 }

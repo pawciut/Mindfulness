@@ -26,6 +26,16 @@ public class SceneNavigation : MonoBehaviour
         SceneManager.LoadScene(Constants.Level1Scene);
     }
 
+    public void GoToNewHighscore()
+    {
+        SceneManager.LoadScene(Constants.HighscoreScene);
+    }
+
+    public void GoToHighscores()
+    {
+        SceneManager.LoadScene(Constants.HighscoresScene);
+    }
+
 
     public void Exit()
     {

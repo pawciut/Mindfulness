@@ -6,18 +6,22 @@ public class ScoreObject : MonoBehaviour
 {
     public int BonusScore;
 
+    bool added;
     void OnTriggerEnter2D(Collider2D col)
     {
-
-        if (col.gameObject.CompareTag("Player"))
+        if (!added)
         {
-
-            var player = col.gameObject.GetComponent<PlayerController>();
-            if (player != null)
+            if (col.gameObject.CompareTag("Player"))
             {
-                player.AddScore(BonusScore);
-                gameObject.SetActive(false);
-                Destroy(this.gameObject);
+
+                var player = col.gameObject.GetComponent<PlayerController>();
+                if (player != null)
+                {
+                    added = true;
+                    player.AddScore(BonusScore);
+                    gameObject.SetActive(false);
+                    Destroy(this.gameObject);
+                }
             }
         }
         Debug.Log("OnTrigerEnter");

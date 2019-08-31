@@ -9,6 +9,18 @@ EditorBuildSettings:
     path: Assets/Scenes/MenuScene.unity
     guid: 5f9e884252a1c204ebde522e6b3b5014
   - enabled: 1
-    path: Assets/Scenes/PlayerTest_001.unity
-    guid: 48561553ed2bfbc41947ef6ee97c1c05
+    path: Assets/Scenes/Level0.unity
+    guid: 6e58dd4f2030d2c4981b385e162a58a1
+  - enabled: 1
+    path: Assets/Scenes/Level1.unity
+    guid: ab78a7a31bf2665439991071b70849bc
+  - enabled: 1
+    path: Assets/Scenes/Highscore.unity
+    guid: 802a8699e6cc4594abc378d139c24766
+  - enabled: 1
+    path: Assets/Scenes/Highscores.unity
+    guid: 3f0f1ca592f6b5a4c81e48c88dad58b4
+  - enabled: 1
+    path: Assets/Scenes/Credits.unity
+    guid: 2ca756417687cd84594be8f7e3dcaafd
   m_configObjects: {}
