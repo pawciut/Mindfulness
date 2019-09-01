@@ -10,7 +10,10 @@ public class Constants
     public const string DateFormat = "yyyy-MM-dd HH:mm";
     public const string Player_Pref_Score = "score";
     public const string Player_Pref_Time = "time";
+    public const string Player_Pref_Lives = "lives";
     public const string Player_Pref_Music = "music";
+
+    public const string Tag_Player = "Player";
 
     public const int Name_Char_Limit = 10;
     public const int Score_Char_Limit = 15;

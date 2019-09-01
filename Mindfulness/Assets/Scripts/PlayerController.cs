@@ -6,6 +6,10 @@ using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour, IPlayerController
 {
+    [SerializeField()]
+    GameStateManager gameStateManager;
+
+
     [SerializeField]
     float JumpHeight = 600;
     [SerializeField]
@@ -24,7 +28,6 @@ public class PlayerController : MonoBehaviour, IPlayerController
     [SerializeField()]
     AudioSource JumpSound;
     
-    public bool DontCountScore;
 
 
     [Range(0, .3f)]
@@ -250,20 +253,12 @@ public class PlayerController : MonoBehaviour, IPlayerController
 
     public void AddScore(int scoreValue)
     {
-        if (!DontCountScore)
-        {
-            var score = PlayerPrefs.GetInt(Constants.Player_Pref_Score, 0);
-            score += scoreValue;
-            PlayerPrefs.SetInt(Constants.Player_Pref_Score, score);
-            UIPlayerManager.ScorePresenter.text = score.ToString();
-
-            Debug.Log($"Added score {scoreValue}");
-        }
+        gameStateManager?.AddScore(scoreValue);
     }
 
     public void Damage(int damage)
     {
-        UIPlayerManager.SubstractLives(damage);
+        gameStateManager.SubstractLives(damage);
         WoundedSound?.Play();
     }
 }

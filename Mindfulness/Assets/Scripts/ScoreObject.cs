@@ -11,7 +11,7 @@ public class ScoreObject : MonoBehaviour
     {
         if (!added)
         {
-            if (col.gameObject.CompareTag("Player"))
+            if (col.gameObject.CompareTag(Constants.Tag_Player))
             {
 
                 var player = col.gameObject.GetComponent<PlayerController>();
@@ -19,6 +19,7 @@ public class ScoreObject : MonoBehaviour
                 {
                     added = true;
                     player.AddScore(BonusScore);
+                    //Wyłączam obiekt przed usunięciem na wszelki wypadek, żeby nie był widoczny w razie opóźnienia z usuwaniem
                     gameObject.SetActive(false);
                     Destroy(this.gameObject);
                 }

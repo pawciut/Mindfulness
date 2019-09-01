@@ -19,12 +19,30 @@ public class UIPlayerManager : MonoBehaviour
 
     public GameObject Focus;
 
-    public GameStateManager StateManager;
-    public TextMeshProUGUI TimePresenter;
-    public TextMeshProUGUI ScorePresenter;
+    [SerializeField()]
+    GameStateManager StateManager;
+
+    /// <summary>
+    /// TimeValuePresenter to jedyna kontrolka do prezentacji czasu wiec posluzy i do ukrywania i do wyswietlanai wartosci
+    /// </summary>
+    [Header("Time Settings")]
+    [SerializeField()]
+    TextMeshProUGUI TimeValuePresenter;
+
+    /// <summary>
+    /// Score prezenter to obiekt pod którym jest Etykieta oraz Wartość wyniku, posłuży nam do ukrywania tych informacji
+    /// </summary>
+    [Header("Score Settings")]
+    [SerializeField()]
+    GameObject ScorePresenter;
+    /// <summary>
+    /// Tylko kontrolka do prezentacji wartości wyniku
+    /// </summary>
+    [SerializeField()]
+    TextMeshProUGUI ScoreValuePresenter;
 
 
-    public UILifeControl[] Lives = new UILifeControl[3];
+    public UILifeControl[] Lives = new UILifeControl[GameStateManager.MaxLives];
     public int InitialLives = 3;
 
     public AudioSource PlayerDeathSound;
@@ -32,54 +50,38 @@ public class UIPlayerManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Focus.SetActive(true);
-        for(int i=0;i<InitialLives;++i)
-        {
-            Lives[i].Add();
-        }
-        //SubstractLives(1);
+        Focus.SetActive(true);//Włącza obiekt efektu wizualnego Focus, bo inaczej by w edytorze zaslanial mape, a po rozpoczeciu musi byc wlaczony
+
+        if (StateManager.TimeDisabled)
+            HideTime();
+        if (StateManager.ScoreDisabled)
+            HideScore();
     }
+
 
     // Update is called once per frame
     void Update()
     {
-        TimePresenter.text = StateManager.GetTime();
     }
 
-    public void AddLives(int lives)
+    private void ResetLives()
     {
-        int livesToAdd = lives;
-        while(livesToAdd > 0)
+        foreach(var liveUI in Lives)
         {
-            var found = Lives.FirstOrDefault(l => l.Active == false);
-            if(found == null)
-            {
+            liveUI.Add();
+        }
+    }
 
-            }
+    public void UpdateLives()
+    {
+        var lives = PlayerPrefs.GetInt(Constants.Player_Pref_Lives, 0);
+        for(int i=0;i<GameStateManager.MaxLives;++i)
+        {
+            if (lives > 0)
+                Lives[i].Add();
             else
-                found.Add();
-            --livesToAdd;
-        }
-        foreach (var l in Lives)
-            l.UpdateLife();
-        Debug.Log($"Added {lives} lives");
-    }
-
-    public void SubstractLives(int lives)
-    {
-        int livesToSubstract = lives;
-        while (livesToSubstract > 0)
-        {
-            var found = Lives.LastOrDefault(l => l.Active == true);
-            if (found != null)
-                found.Remove();
-            --livesToSubstract;
-        }
-
-        if (Lives.Where(l => l.Active).Count() <= 0)
-        {
-            PlayerDeathSound.Play();
-            PlayerDied?.Invoke();
+                Lives[i].Remove();
+            --lives;
         }
     }
 
@@ -114,5 +116,43 @@ public class UIPlayerManager : MonoBehaviour
         }
     }
 
-    
+    /// <summary>
+    /// ta akcja powinna byc wywolana przez zdarzenie GameStateManagera.ScoreUpdated
+    /// </summary>
+    public void UpdateScoreText()
+    {
+        if (ScoreValuePresenter != null)
+            ScoreValuePresenter.text = PlayerPrefs.GetInt(Constants.Player_Pref_Score, 0).ToString();
+        else
+            Debug.LogError($"{nameof(ScoreValuePresenter)} not set");
+    }
+
+    public void UpdateTimeText()
+    {
+        if(TimeValuePresenter != null)
+            TimeValuePresenter.text = Constants.FormatTime(PlayerPrefs.GetInt(Constants.Player_Pref_Time, 0));
+        else
+            Debug.LogError($"{nameof(TimeValuePresenter)} not set");
+    }
+
+    public void ShowTime()
+    {
+        TimeValuePresenter.gameObject.SetActive(true);
+    }
+    public void HideTime()
+    {
+        TimeValuePresenter.gameObject.SetActive(false);
+    }
+    public void ShowScore()
+    {
+        TimeValuePresenter.gameObject.SetActive(true);
+    }
+    public void HideScore()
+    {
+        TimeValuePresenter.gameObject.SetActive(false);
+    }
+
+
+
+
 }
